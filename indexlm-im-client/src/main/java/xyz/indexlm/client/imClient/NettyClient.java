@@ -9,8 +9,10 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import xyz.indexlm.client.handler.LoginResponceHandler;
 import xyz.indexlm.im.common.codec.ProtobufDecoder;
 import xyz.indexlm.im.common.codec.ProtobufEncoder;
 
@@ -37,6 +39,10 @@ public class NettyClient implements Serializable {
      * 唯一标记
      */
     private boolean initFalg = true;
+
+
+    @Autowired
+    private LoginResponceHandler loginResponceHandler;
 
     private GenericFutureListener<ChannelFuture> connectedListener;
     private Bootstrap b;
@@ -69,7 +75,7 @@ public class NettyClient implements Serializable {
                         public void initChannel(SocketChannel ch) {
                             ch.pipeline().addLast("decoder", new ProtobufDecoder());
                             ch.pipeline().addLast("encoder", new ProtobufEncoder());
-//                            ch.pipeline().addLast(loginResponceHandler);
+                            ch.pipeline().addLast(loginResponceHandler);
 //                            ch.pipeline().addLast(chatMsgHandler);
 //                            ch.pipeline().addLast(exceptionHandler);
                         }
